@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor, from, null, 0);
         lista.setAdapter(adapter);
 
-        //Obtener ID de contactos para mostrar información
+        //Obtener ID de alumnos para mostrar información
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -85,12 +85,34 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-
-
     @Override
+    //evento click de botones
     public void onClick(View v) {
+        if(v.getId() == R.id.button) {
+            //hacer una busqueda de alumnos
+            final Cursor cursor = manager.buscarAlumno(tv.getText().toString());
+            adapter.changeCursor(cursor);
+            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    cursor.moveToPosition(position);
+                    Intent editar = new Intent(MainActivity.this, EditarActivity.class);
+                    editar.putExtra("matricula", cursor.getInt(0));
+                    startActivity(editar);
+                    finish();
+                }
+            });
+        }
 
+        if(v.getId() == R.id.btnagregar){
+            Intent agregar = new Intent(MainActivity.this, AgregarActivity.class);
+            startActivity(agregar);
+            finish();
+        }
     }
+
+
+}
 
     /*
     @Override
@@ -104,5 +126,3 @@ public class MainActivity extends Activity implements View.OnClickListener {
             return insets;
         });
     }*/
-
-}
